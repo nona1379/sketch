@@ -115,6 +115,7 @@
 
         canvas.addEventListener("mouseup", () => {
             drawing = false;
+            ctx.beginPath(); // Reset the path to avoid sharp edges when resuming
         });
 
         canvas.addEventListener("mousemove", (e) => {
@@ -135,10 +136,13 @@
                 ctx.closePath();
             } else if (mode === "erase") {
                 // Erase part of the canvas smoothly
-                ctx.beginPath();
                 ctx.globalCompositeOperation = 'destination-out';
-                ctx.arc(currentX, currentY, eraserSize / 2, 0, Math.PI * 2, false);
-                ctx.fill();
+                ctx.lineWidth = eraserSize;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+                ctx.closePath();
                 ctx.globalCompositeOperation = 'source-over';
             }
 
