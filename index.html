@@ -3,10 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas Example</title>
+    <title>Canvas Drawing and Save</title>
+    <style>
+        #drawingCanvas {
+            border: 1px solid black;
+        }
+        #outputImage {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="drawingCanvas" width="500" height="500" style="border: 1px solid black;"></canvas>
-    <script src="script.js"></script>
+    <h1>Canvas Drawing and Save</h1>
+    <canvas id="drawingCanvas" width="500" height="500"></canvas>
+    <br>
+    <button id="saveButton">Save as JPG</button>
+    <div>
+        <h2>Saved Image:</h2>
+        <img id="outputImage" alt="Your drawing will appear here">
+    </div>
+
+    <script>
+        const canvas = document.getElementById("drawingCanvas");
+        const ctx = canvas.getContext("2d");
+        const saveButton = document.getElementById("saveButton");
+        const outputImage = document.getElementById("outputImage");
+
+        let drawing = false;
+
+        // Start drawing
+        canvas.addEventListener("mousedown", () => drawing = true);
+        canvas.addEventListener("mouseup", () => drawing = false);
+        canvas.addEventListener("mousemove", draw);
+
+        function draw(event) {
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            ctx.fillStyle = "black";
+            ctx.beginPath();
+            ctx.arc(x, y, 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Save as JPG and display
+        saveButton.addEventListener("click", () => {
+            const dataURL = canvas.toDataURL("image/jpeg");
+            outputImage.src = dataURL;
+            outputImage.style.display = "block"; // Show the image
+        });
+    </script>
 </body>
 </html>
