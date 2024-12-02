@@ -46,6 +46,12 @@
         <button id="drawButton">Draw</button>
         <button id="eraseButton">Erase</button>
         <button id="eraseAllButton">Erase All</button>
+        <button id="thinBrushButton">Thin Brush</button>
+        <button id="mediumBrushButton">Medium Brush</button>
+        <button id="thickBrushButton">Thick Brush</button>
+        <button id="smallEraserButton">Small Eraser</button>
+        <button id="mediumEraserButton">Medium Eraser</button>
+        <button id="largeEraserButton">Large Eraser</button>
         <button id="saveButton">Save as JPG</button>
     </div>
     <div id="savedImages"></div>
@@ -56,6 +62,12 @@
         const drawButton = document.getElementById("drawButton");
         const eraseButton = document.getElementById("eraseButton");
         const eraseAllButton = document.getElementById("eraseAllButton");
+        const thinBrushButton = document.getElementById("thinBrushButton");
+        const mediumBrushButton = document.getElementById("mediumBrushButton");
+        const thickBrushButton = document.getElementById("thickBrushButton");
+        const smallEraserButton = document.getElementById("smallEraserButton");
+        const mediumEraserButton = document.getElementById("mediumEraserButton");
+        const largeEraserButton = document.getElementById("largeEraserButton");
         const saveButton = document.getElementById("saveButton");
         const savedImages = document.getElementById("savedImages");
 
@@ -63,6 +75,8 @@
         let mode = "draw";  // Initial mode is "draw"
         let lastX = 0;
         let lastY = 0;
+        let brushSize = 2;   // Default brush size
+        let eraserSize = 20; // Default eraser size
 
         // Set white background to avoid black background when saving as jpg
         function setCanvasBackground() {
@@ -98,12 +112,12 @@
                 ctx.moveTo(lastX, lastY);
                 ctx.lineTo(currentX, currentY);
                 ctx.strokeStyle = "black";
-                ctx.lineWidth = 2;
+                ctx.lineWidth = brushSize;
                 ctx.stroke();
                 ctx.closePath();
             } else if (mode === "erase") {
                 // Erase part of the canvas
-                ctx.clearRect(currentX - 10, currentY - 10, 20, 20); // Erase with 20x20 rectangle
+                ctx.clearRect(currentX - eraserSize / 2, currentY - eraserSize / 2, eraserSize, eraserSize);
             }
 
             lastX = currentX;
@@ -118,6 +132,32 @@
         // Set mode to erase
         eraseButton.addEventListener("click", () => {
             mode = "erase";
+        });
+
+        // Set brush size
+        thinBrushButton.addEventListener("click", () => {
+            brushSize = 1;
+        });
+
+        mediumBrushButton.addEventListener("click", () => {
+            brushSize = 2;
+        });
+
+        thickBrushButton.addEventListener("click", () => {
+            brushSize = 3;
+        });
+
+        // Set eraser size
+        smallEraserButton.addEventListener("click", () => {
+            eraserSize = 2;
+        });
+
+        mediumEraserButton.addEventListener("click", () => {
+            eraserSize = 5;
+        });
+
+        largeEraserButton.addEventListener("click", () => {
+            eraserSize = 10;
         });
 
         // Erase all canvas
