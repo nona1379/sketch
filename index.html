@@ -20,6 +20,10 @@
         }
         #controls {
             margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
         }
         .outputImageContainer {
             position: relative;
@@ -43,16 +47,26 @@
     <h1>Drawing Canvas with Erase and Clear Options</h1>
     <canvas id="drawingCanvas" width="400" height="400"></canvas>
     <div id="controls">
-        <button id="drawButton">Draw</button>
-        <button id="eraseButton">Erase</button>
-        <button id="eraseAllButton">Erase All</button>
-        <button id="thinBrushButton">Thin Brush</button>
-        <button id="mediumBrushButton">Medium Brush</button>
-        <button id="thickBrushButton">Thick Brush</button>
-        <button id="smallEraserButton">Small Eraser</button>
-        <button id="mediumEraserButton">Medium Eraser</button>
-        <button id="largeEraserButton">Large Eraser</button>
-        <button id="saveButton">Save as JPG</button>
+        <div>
+            <button id="drawButton">Draw</button>
+            <button id="eraseButton">Erase</button>
+            <button id="eraseAllButton">Erase All</button>
+        </div>
+        <div>
+            <label>Brush Size: </label>
+            <button id="thinBrushButton">Thin</button>
+            <button id="mediumBrushButton">Medium</button>
+            <button id="thickBrushButton">Thick</button>
+        </div>
+        <div>
+            <label>Eraser Size: </label>
+            <button id="smallEraserButton">Small</button>
+            <button id="mediumEraserButton">Medium</button>
+            <button id="largeEraserButton">Large</button>
+        </div>
+        <div>
+            <button id="saveButton">Save as JPG</button>
+        </div>
     </div>
     <div id="savedImages"></div>
 
@@ -137,27 +151,33 @@
         // Set brush size
         thinBrushButton.addEventListener("click", () => {
             brushSize = 1;
+            mode = "draw";  // Ensure we're in drawing mode
         });
 
         mediumBrushButton.addEventListener("click", () => {
             brushSize = 2;
+            mode = "draw";  // Ensure we're in drawing mode
         });
 
         thickBrushButton.addEventListener("click", () => {
             brushSize = 3;
+            mode = "draw";  // Ensure we're in drawing mode
         });
 
         // Set eraser size
         smallEraserButton.addEventListener("click", () => {
             eraserSize = 2;
+            mode = "erase";  // Ensure we're in erasing mode
         });
 
         mediumEraserButton.addEventListener("click", () => {
             eraserSize = 5;
+            mode = "erase";  // Ensure we're in erasing mode
         });
 
         largeEraserButton.addEventListener("click", () => {
             eraserSize = 10;
+            mode = "erase";  // Ensure we're in erasing mode
         });
 
         // Erase all canvas
