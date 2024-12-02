@@ -21,9 +21,13 @@
         #controls {
             margin-bottom: 20px;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
-            justify-content: center;
+            align-items: center;
+        }
+        .buttonGroup {
+            display: flex;
+            gap: 10px;
         }
         .outputImageContainer {
             position: relative;
@@ -47,24 +51,24 @@
     <h1>sticky note</h1>
     <canvas id="drawingCanvas" width="400" height="400"></canvas>
     <div id="controls">
-        <div>
+        <div class="buttonGroup">
             <button id="drawButton">Draw</button>
             <button id="eraseButton">Erase</button>
             <button id="eraseAllButton">Erase All</button>
         </div>
-        <div>
+        <div class="buttonGroup">
             <label>Brush Size: </label>
             <button id="thinBrushButton">Thin</button>
             <button id="mediumBrushButton">Medium</button>
             <button id="thickBrushButton">Thick</button>
         </div>
-        <div>
+        <div class="buttonGroup">
             <label>Eraser Size: </label>
             <button id="smallEraserButton">Small</button>
             <button id="mediumEraserButton">Medium</button>
             <button id="largeEraserButton">Large</button>
         </div>
-        <div>
+        <div class="buttonGroup">
             <button id="saveButton">Save as JPG</button>
         </div>
     </div>
@@ -130,8 +134,12 @@
                 ctx.stroke();
                 ctx.closePath();
             } else if (mode === "erase") {
-                // Erase part of the canvas
-                ctx.clearRect(currentX - eraserSize / 2, currentY - eraserSize / 2, eraserSize, eraserSize);
+                // Erase part of the canvas smoothly
+                ctx.beginPath();
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.arc(currentX, currentY, eraserSize / 2, 0, Math.PI * 2, false);
+                ctx.fill();
+                ctx.globalCompositeOperation = 'source-over';
             }
 
             lastX = currentX;
