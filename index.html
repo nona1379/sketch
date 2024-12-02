@@ -135,15 +135,14 @@
                 ctx.stroke();
                 ctx.closePath();
             } else if (mode === "erase") {
-                // Erase part of the canvas smoothly
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.lineWidth = eraserSize;
+                // Erase by drawing with white color
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY);
                 ctx.lineTo(currentX, currentY);
+                ctx.strokeStyle = "white";
+                ctx.lineWidth = eraserSize;
                 ctx.stroke();
                 ctx.closePath();
-                ctx.globalCompositeOperation = 'source-over';
             }
 
             lastX = currentX;
