@@ -127,6 +127,7 @@
 
             if (mode === "draw") {
                 // Draw smooth line
+                ctx.globalCompositeOperation = 'source-over';
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY);
                 ctx.lineTo(currentX, currentY);
@@ -135,11 +136,11 @@
                 ctx.stroke();
                 ctx.closePath();
             } else if (mode === "erase") {
-                // Erase by drawing with white color
+                // Erase part of the canvas smoothly
+                ctx.globalCompositeOperation = 'destination-out';
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY);
                 ctx.lineTo(currentX, currentY);
-                ctx.strokeStyle = "white";
                 ctx.lineWidth = eraserSize;
                 ctx.stroke();
                 ctx.closePath();
