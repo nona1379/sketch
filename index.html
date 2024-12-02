@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Drawing Canvas with Save and Delete</title>
+    <title>Drawing Canvas with Erase and Clear Options</title>
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
         #drawingCanvas {
             border: 1px solid black;
+            margin-bottom: 10px;
+        }
+        #controls {
+            margin-bottom: 20px;
         }
         .outputImageContainer {
-            margin-top: 20px;
             position: relative;
+            margin-bottom: 20px;
         }
         .outputImage {
             display: block;
@@ -27,19 +40,27 @@
     </style>
 </head>
 <body>
-    <h1>Canvas Drawing with Smooth Lines, Save, and Delete</h1>
-    <canvas id="drawingCanvas" width="500" height="500"></canvas>
-    <br>
-    <button id="saveButton">Save as JPG</button>
+    <h1>Drawing Canvas with Erase and Clear Options</h1>
+    <canvas id="drawingCanvas" width="400" height="400"></canvas>
+    <div id="controls">
+        <button id="drawButton">Draw</button>
+        <button id="eraseButton">Erase</button>
+        <button id="eraseAllButton">Erase All</button>
+        <button id="saveButton">Save as JPG</button>
+    </div>
     <div id="savedImages"></div>
 
     <script>
         const canvas = document.getElementById("drawingCanvas");
         const ctx = canvas.getContext("2d");
+        const drawButton = document.getElementById("drawButton");
+        const eraseButton = document.getElementById("eraseButton");
+        const eraseAllButton = document.getElementById("eraseAllButton");
         const saveButton = document.getElementById("saveButton");
         const savedImages = document.getElementById("savedImages");
 
         let drawing = false;
+        let mode = "draw";  // Initial mode is "draw"
         let lastX = 0;
         let lastY = 0;
 
@@ -52,7 +73,7 @@
         // Initialize canvas background
         setCanvasBackground();
 
-        // Start drawing
+        // Start drawing or erasing
         canvas.addEventListener("mousedown", (e) => {
             drawing = true;
             const rect = canvas.getBoundingClientRect();
@@ -71,18 +92,37 @@
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
 
-            // Draw smooth line
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY); // Move to previous point
-            ctx.lineTo(currentX, currentY); // Draw to current point
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.closePath();
+            if (mode === "draw") {
+                // Draw smooth line
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(currentX, currentY);
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.closePath();
+            } else if (mode === "erase") {
+                // Erase part of the canvas
+                ctx.clearRect(currentX - 10, currentY - 10, 20, 20); // Erase with 20x20 rectangle
+            }
 
-            // Update last position
             lastX = currentX;
             lastY = currentY;
+        });
+
+        // Set mode to draw
+        drawButton.addEventListener("click", () => {
+            mode = "draw";
+        });
+
+        // Set mode to erase
+        eraseButton.addEventListener("click", () => {
+            mode = "erase";
+        });
+
+        // Erase all canvas
+        eraseAllButton.addEventListener("click", () => {
+            setCanvasBackground(); // Reset canvas to white background
         });
 
         // Save as JPG and display
