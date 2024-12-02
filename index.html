@@ -3,36 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Drawing Canvas</title>
+    <title>Smooth Drawing Canvas with Save and Delete</title>
     <style>
         #drawingCanvas {
             border: 1px solid black;
         }
-        #outputImage {
+        .outputImageContainer {
             margin-top: 20px;
-            display: none;
+            position: relative;
+        }
+        .outputImage {
+            display: block;
+        }
+        .deleteButton {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Canvas Drawing with Smooth Lines</h1>
+    <h1>Canvas Drawing with Smooth Lines, Save, and Delete</h1>
     <canvas id="drawingCanvas" width="500" height="500"></canvas>
     <br>
     <button id="saveButton">Save as JPG</button>
-    <div>
-        <h2>Saved Image:</h2>
-        <img id="outputImage" alt="Your drawing will appear here">
-    </div>
+    <div id="savedImages"></div>
 
     <script>
         const canvas = document.getElementById("drawingCanvas");
         const ctx = canvas.getContext("2d");
         const saveButton = document.getElementById("saveButton");
-        const outputImage = document.getElementById("outputImage");
+        const savedImages = document.getElementById("savedImages");
 
         let drawing = false;
         let lastX = 0;
         let lastY = 0;
+
+        // Set white background to avoid black background when saving as jpg
+        function setCanvasBackground() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Initialize canvas background
+        setCanvasBackground();
 
         // Start drawing
         canvas.addEventListener("mousedown", (e) => {
@@ -70,8 +88,27 @@
         // Save as JPG and display
         saveButton.addEventListener("click", () => {
             const dataURL = canvas.toDataURL("image/jpeg");
-            outputImage.src = dataURL;
-            outputImage.style.display = "block"; // Show the image
+            
+            // Create container for image and delete button
+            const imageContainer = document.createElement("div");
+            imageContainer.className = "outputImageContainer";
+
+            // Create image element
+            const img = document.createElement("img");
+            img.src = dataURL;
+            img.className = "outputImage";
+            imageContainer.appendChild(img);
+
+            // Create delete button
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "deleteButton";
+            deleteButton.innerText = "Delete";
+            deleteButton.addEventListener("click", () => {
+                savedImages.removeChild(imageContainer);
+            });
+
+            imageContainer.appendChild(deleteButton);
+            savedImages.appendChild(imageContainer);
         });
     </script>
 </body>
